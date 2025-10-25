@@ -779,10 +779,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const activityType = getActivityType(activity, activityDetails.description);
-    const typeInfo = activityTypes[activityType];
-    const formattedSchedule = formatSchedule(activityDetails);
-
     // Create share message
     const shareText = `Check out ${activity} at Mergington High School! ${activityDetails.description}`;
     const shareUrl = window.location.href;
@@ -806,6 +802,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
 
       case "email":
+        const formattedSchedule = formatSchedule(activityDetails);
         const emailSubject = `Check out ${activity} at Mergington High School`;
         const emailBody = `Hi,\n\nI wanted to share this activity with you:\n\n${activity}\n${activityDetails.description}\n\nSchedule: ${formattedSchedule}\n\nLearn more at: ${shareUrl}`;
         shareLink = `mailto:?subject=${encodeURIComponent(
