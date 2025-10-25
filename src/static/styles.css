@@ -674,6 +674,7 @@ footer {
   align-items: center;
   justify-content: center;
   min-width: 40px;
+  color: var(--primary-text);
 }
 
 #theme-toggle:hover {

@@ -3,11 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeToggle = document.getElementById("theme-toggle");
   const themeIcon = document.getElementById("theme-icon");
   
-  // Check for saved theme preference or default to light mode
-  const savedTheme = localStorage.getItem("theme") || "light";
+  // Check for saved theme preference or default to system preference
+  const savedTheme = localStorage.getItem("theme");
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const defaultTheme = savedTheme || (prefersDark ? "dark" : "light");
   
-  // Apply saved theme on page load
-  if (savedTheme === "dark") {
+  // Apply theme on page load
+  if (defaultTheme === "dark") {
     document.body.classList.add("dark-mode");
     themeIcon.textContent = "☀️";
   } else {
