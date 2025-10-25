@@ -552,6 +552,17 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")}
         </ul>
       </div>
+      <div class="share-buttons">
+        <button class="share-button" data-activity="${name}" data-platform="twitter" title="Share on Twitter">
+          𝕏
+        </button>
+        <button class="share-button" data-activity="${name}" data-platform="facebook" title="Share on Facebook">
+          f
+        </button>
+        <button class="share-button" data-activity="${name}" data-platform="email" title="Share via Email">
+          ✉
+        </button>
+      </div>
       <div class="activity-card-actions">
         ${
           currentUser
@@ -575,6 +586,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = activityCard.querySelectorAll(".delete-participant");
     deleteButtons.forEach((button) => {
       button.addEventListener("click", handleUnregister);
+    });
+
+    // Add click handlers for share buttons
+    const shareButtons = activityCard.querySelectorAll(".share-button");
+    shareButtons.forEach((button) => {
+      button.addEventListener("click", handleShare);
     });
 
     // Add click handler for register button (only when authenticated)
@@ -750,6 +767,53 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 300);
       }
     });
+  }
+
+  // Handle social sharing
+  function handleShare(event) {
+    const activity = event.currentTarget.dataset.activity;
+    const platform = event.currentTarget.dataset.platform;
+    const activityDetails = allActivities[activity];
+
+    if (!activityDetails) {
+      return;
+    }
+
+    const activityType = getActivityType(activity, activityDetails.description);
+    const typeInfo = activityTypes[activityType];
+    const formattedSchedule = formatSchedule(activityDetails);
+
+    // Create share message
+    const shareText = `Check out ${activity} at Mergington High School! ${activityDetails.description}`;
+    const shareUrl = window.location.href;
+
+    // Open share dialog based on platform
+    let shareLink = "";
+
+    switch (platform) {
+      case "twitter":
+        shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          shareText
+        )}&url=${encodeURIComponent(shareUrl)}`;
+        window.open(shareLink, "_blank", "width=600,height=400");
+        break;
+
+      case "facebook":
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          shareUrl
+        )}&quote=${encodeURIComponent(shareText)}`;
+        window.open(shareLink, "_blank", "width=600,height=400");
+        break;
+
+      case "email":
+        const emailSubject = `Check out ${activity} at Mergington High School`;
+        const emailBody = `Hi,\n\nI wanted to share this activity with you:\n\n${activity}\n${activityDetails.description}\n\nSchedule: ${formattedSchedule}\n\nLearn more at: ${shareUrl}`;
+        shareLink = `mailto:?subject=${encodeURIComponent(
+          emailSubject
+        )}&body=${encodeURIComponent(emailBody)}`;
+        window.location.href = shareLink;
+        break;
+    }
   }
 
   // Handle unregistration with confirmation
